@@ -83,6 +83,14 @@ between 84,319.6 µm² (synthesized logic) and 279,385.5 µm² (final chip
 area) is fill/tap/decap/buffer insertion during place-and-route, not a
 measurement error.
 
+**Layout screenshots** (final placement, routing, congestion, clock tree — `docs/screenshots/`):
+
+| | minimal | balanced | full_featured |
+|---|---|---|---|
+| Final placement | [placement](docs/screenshots/pnr_minimal/final_placement.webp.png) | [placement](docs/screenshots/pnr_balanced/final_placement.webp.png) | [placement](docs/screenshots/pnr_full_featured/final_placement.webp.png) |
+| Final routing | [routing](docs/screenshots/pnr_minimal/final_routing.webp.png) | [routing](docs/screenshots/pnr_balanced/final_routing.webp.png) | [routing](docs/screenshots/pnr_full_featured/final_routing.webp.png) |
+| Congestion | [congestion](docs/screenshots/pnr_minimal/final_congestion.webp.png) | [congestion](docs/screenshots/pnr_balanced/final_congestion.webp.png) | [congestion](docs/screenshots/pnr_full_featured/final_congestion.webp.png) |
+
 ## Running
 
 ```bash
