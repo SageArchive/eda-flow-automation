@@ -1,0 +1,15 @@
+{
+  "variant_name": "minimal",
+  "description": "Smallest-area build: no multiplier/divider, no barrel shifter, IRQ disabled",
+  "top_module": "picorv32",
+  "clock_period_ns": 20.0,
+  "params": {
+    "ENABLE_MUL": 0,
+    "ENABLE_FAST_MUL": 0,
+    "ENABLE_DIV": 0,
+    "BARREL_SHIFTER": 0,
+    "ENABLE_IRQ": 0,
+    "COMPRESSED_ISA": 0,
+    "ENABLE_COUNTERS": 1
+  }
+}

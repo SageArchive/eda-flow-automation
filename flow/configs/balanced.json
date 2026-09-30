@@ -1,0 +1,15 @@
+{
+  "variant_name": "balanced",
+  "description": "Balanced build: barrel shifter + multiplier enabled, no fast multiplier, no IRQ",
+  "top_module": "picorv32",
+  "clock_period_ns": 15.0,
+  "params": {
+    "ENABLE_MUL": 1,
+    "ENABLE_FAST_MUL": 0,
+    "ENABLE_DIV": 1,
+    "BARREL_SHIFTER": 1,
+    "ENABLE_IRQ": 0,
+    "COMPRESSED_ISA": 0,
+    "ENABLE_COUNTERS": 1
+  }
+}

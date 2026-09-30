@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Yosys
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq yosys
+
+      - name: Install Python dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run test suite
+        run: PYTHONPATH=. pytest tests/ -v
+
+      - name: Run full QoR comparison across variants
+        run: PYTHONPATH=. python -m scheduler.job_scheduler --csv qor_results.csv
+
+      - name: Upload QoR results
+        uses: actions/upload-artifact@v4
+        with:
+          name: qor-results
+          path: qor_results.csv
