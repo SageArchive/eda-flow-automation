@@ -59,29 +59,36 @@ Note: these are technology-independent gate counts (generic `abc -g cmos2`
 mapping), not sky130 standard cells — useful for comparing variants
 relatively, not for area in real units. For that, see below.
 
-## Results — full RTL-to-GDSII (measured, OpenROAD-flow-scripts + SkyWater130 `sky130hd`, `minimal` variant, 20 ns clock)
+## Results — full RTL-to-GDSII, all 3 variants (measured, OpenROAD-flow-scripts + SkyWater130 `sky130hd`)
 
-Run via `make DESIGN_CONFIG=./designs/sky130hd/picorv32/config.mk` inside
-the `openroad/orfs` Docker image (config in `flow/pnr/orfs-design/`),
+Each variant run via `make DESIGN_CONFIG=./designs/sky130hd/<variant>/config.mk`
+inside the `openroad/orfs` Docker image (configs in `flow/pnr/orfs-design/`),
 covering synthesis → floorplan → placement → CTS → global/detailed route →
-finish, against the real `sky130_fd_sc_hd` standard-cell library:
+finish, against the real `sky130_fd_sc_hd` standard-cell library. `balanced`
+and `full_featured` are parameter-override wrapper modules around the same
+`picorv32.v` (see `flow/pnr/orfs-design/picorv32_balanced.v` /
+`picorv32_full_featured.v`) so all three go through the identical flow:
 
-| Metric | Result |
-|---|---|
-| Standard cells (post-synthesis, real sky130 cells) | 6,402 |
-| Logic area (post-synthesis) | 84,319.6 µm² |
-| Final chip area (incl. fill/tap/decap cells) | 279,385.5 µm² |
-| Routing DRC violations | **0** |
-| Worst negative slack (WNS) / total negative slack (TNS) | 0.00 / 0.00 (no violations) |
-| Worst slack margin (best case) | 10.30 ns of 20 ns clock |
-| IR drop, VDD / VSS | 0.00% / 0.01% (both clean) |
+| Variant | Clock period | Cells (real sky130) | Logic area (post-synth) | DRC violations | WNS / TNS | Worst slack margin | Total power |
+|---|---|---|---|---|---|---|---|
+| minimal | 20 ns | 6,402 | 84,319.6 µm² | 0 | 0.00 / 0.00 | 10.30 ns | — |
+| balanced | 15 ns | 8,953 | 112,301.5 µm² | 0 | 0.00 / 0.00 | 6.88 ns | 17.6 mW |
+| full_featured | 10 ns | 13,267 | 156,657.7 µm² | 0 | 0.00 / 0.00 | 0.55 ns | 25.7 mW |
 
-The synthesis-stage table above uses generic technology-independent gates
-(for fast, config-driven variant comparison); this table is the real
-sky130 physical result for one variant, run through the full flow. The gap
-between 84,319.6 µm² (synthesized logic) and 279,385.5 µm² (final chip
-area) is fill/tap/decap/buffer insertion during place-and-route, not a
-measurement error.
+All three close timing and route with **zero DRC violations** — including
+`full_featured`, which only barely meets its aggressive 10 ns clock (0.55 ns
+of margin left). Cell count and area scale roughly 2x from `minimal` to
+`full_featured` (fast multiplier, divider, barrel shifter, IRQ, compressed
+ISA), and power roughly follows the same trend. `minimal`'s final chip area
+was also measured post-finish (after fill/tap/decap cell insertion, not
+just synthesized logic) at 279,385.5 µm² — larger than the 84,319.6 µm²
+"logic area" figure above because fill/tap/decap/buffer insertion during
+place-and-route adds cells purely for manufacturability, not logic.
+
+The synthesis-stage table further above uses generic technology-independent
+gates (for fast, config-driven variant comparison without needing the full
+P&R toolchain); this table is the real sky130 physical result for all three
+variants, run through the full flow.
 
 **Layout screenshots** (final placement, routing, congestion, clock tree — `docs/screenshots/`):
 

@@ -4,3 +4,5 @@ __pycache__/
 *.rpt
 *.def
 qor_results.csv
+.idea/
+.venv/
